@@ -33,7 +33,7 @@ if not FB_APP_SECRET:
 bot = Bot(FB_PAGE_TOKEN)
 
 # Webhook Setup
-@app.route("/webhook", methods=["GET"])
+@app.route("/", methods=["GET"])
 def verify():
     # When the endpoint is registered as a webhook, it must echo back the "hub.challenge" value it receives in the query arguments
     if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
@@ -43,7 +43,7 @@ def verify():
     return "Hello World!", 200
 
 # Message Handler
-@app.route("/webhook", methods=["POST"])
+@app.route("/", methods=["POST"])
 def webhook():
     
     data = request.get_json()
