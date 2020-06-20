@@ -1,51 +1,43 @@
-# app.py
+import os
+
 from flask import Flask, request, jsonify
+#from wit import Wit
+
 app = Flask(__name__)
 
-@app.route('/getmsg/', methods=['GET'])
-def respond():
-    # Retrieve the name from url parameter
-    name = request.args.get("name", None)
+# ~~~~~~~~~~Parameters~~~~~~~~~~
 
-    # For debugging
-    print(f"got name {name}")
+# Webserver Parameter
+port = os.environ.get("PORT") or 8445
 
-    response = {}
+# Wit.ai Parameters
+WIT_TOKEN = os.environ.get("WIT_TOKEN")
 
-    # Check if user sent a name at all
-    if not name:
-        response["ERROR"] = "no name found, please send a name."
-    # Check if the user entered a number not a name
-    elif str(name).isdigit():
-        response["ERROR"] = "name can't be numeric."
-    # Now the user entered a valid name
-    else:
-        response["MESSAGE"] = f"Welcome {name} to our awesome platform!!"
+# Messenger API Parameters
+FB_PAGE_TOKEN = os.environ.get("FB_PAGE_TOKEN")
+if not FB_PAGE_TOKEN:
+  raise ValueError("Missing FB_PAGE_TOKEN!")
+FB_APP_SECRET = os.environ.get("FB_APP_SECRET")
+if not FB_APP_SECRET:
+  raise ValueError("Missing FB_APP_SECRET!")
 
-    # Return the response in json format
-    return jsonify(response)
+# ~~~~~~~~~~Messenger API~~~~~~~~~~
 
-@app.route('/post/', methods=['POST'])
-def post_something():
-    param = request.form.get('name')
-    print(param)
-    # You can add the test cases you made in the previous function, but in our case here you are just testing the POST functionality
-    if param:
-        return jsonify({
-            "Message": f"Welcome {name} to our awesome platform!!",
-            # Add this option to distinct the POST request
-            "METHOD" : "POST"
-        })
-    else:
-        return jsonify({
-            "ERROR": "no name found, please send a name."
-        })
 
-# A welcome message to test our server
-@app.route('/')
-def index():
-    return "<h1>Welcome to our server !!</h1>"
 
-if __name__ == '__main__':
-    # Threaded option to enable multiple instances for multiple user access support
-    app.run(threaded=True, port=5000)
+# ~~~~~~~~~~Wit.ai Bot~~~~~~~~~~
+
+#client = Wit(WIT_TOKEN)
+
+# Webhook Setup
+@app.route('/', methods=["GET"])
+def verify():
+    # when the endpoint is registered as a webhook, it must echo back
+    # the 'hub.challenge' value it receives in the query arguments
+    print (request.headers)
+    if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
+        if not request.args.get("hub.verify_token") == os.environ.get("FB_VERIFY_TOKEN"):
+            return "Verification token mismatch", 403
+        return request.args["hub.challenge"], 200
+
+    return "Hello world", 200
