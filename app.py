@@ -99,7 +99,7 @@ def response(message_text):
         return handle_general_coronavirus_info(intent)
     
     elif intent == "goodbye":
-        return None
+        return handle_goodbye()
 
     else:
         return "Message Not Supported Yet!"
@@ -110,7 +110,7 @@ def handle_general_coronavirus_info(intent):
     return general_coronavirus_info[intent][0]["response"]
 
 def handle_goodbye():
-    return None
+    return "Thank you for chatting with me today. Stay safe and feel free to chat with me anytime you need to!"
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~Main Function~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
