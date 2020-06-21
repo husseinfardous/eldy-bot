@@ -44,16 +44,6 @@ def webhook_setup():
         return request.args["hub.challenge"], 200
     return "Hello World!", 200
 
-# Send Welcome Message
-def welcome_message():
-    data = {
-        "get_started": {
-            "payload": "Hello! This is Eldy Bot, your personal assistant. You can ask me about any questions, information, or concerns you may have regarding COVID-19. You can even tell me if you are feeling lonely or need a physical resource; I will match you with someone who can help you!"
-        }
-    }
-    query_str = "access_token=" + FB_PAGE_TOKEN
-    requests.post("https://graph.facebook.com/v2.6/me/messenger_profile?" + query_str, json=data)
-
 # Message Handler
 @app.route("/", methods=["POST"])
 def message_handler():
