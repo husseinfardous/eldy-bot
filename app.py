@@ -77,9 +77,9 @@ def message_handler():
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~Wit.ai~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Bot
-client = Wit(access_token=WIT_TOKEN)
+wit_client = Wit(access_token=WIT_TOKEN)
 
-# Load General CoVID-19 Information from JSON File
+# Load General COVID-19 Information from JSON File
 general_coronavirus_info = None
 with open("general_coronavirus_info.json") as json_file:
     general_coronavirus_info = json.load(json_file)
@@ -87,16 +87,20 @@ with open("general_coronavirus_info.json") as json_file:
 # Format Reply Message
 def response(message_text):
     
-    wit_response = client.message(message_text)
+    wit_response = wit_client.message(message_text)
 
     if wit_response["intents"] == None or len(wit_response["intents"]) == 0:
         return "Message Not Supported!"
 
+    # Extract Intent with Highest Order of Confidence
     intent = wit_response["intents"][0]["name"]
 
     if intent in general_coronavirus_info:
         return handle_general_coronavirus_info(intent)
     
+    elif intent == "goodbye":
+        return None
+
     else:
         return "Message Not Supported Yet!"
 
@@ -104,6 +108,9 @@ def response(message_text):
 
 def handle_general_coronavirus_info(intent):
     return general_coronavirus_info[intent][0]["response"]
+
+def handle_goodbye():
+    return None
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~Main Function~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
