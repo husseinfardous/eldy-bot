@@ -81,6 +81,9 @@ def response(message_text):
     
     wit_response = client.message(message_text)
 
+    if wit_response["intents"] == None or len(wit_response["intents"]) == 0:
+        return "Message Not Supported!"
+
     intent = wit_response["intents"][0]["name"]
 
     if intent == "covid_definition":
@@ -147,7 +150,7 @@ def response(message_text):
         return handle_general_coronavirus_info("obesity_concern")
     
     else:
-        return "-___-"
+        return "Message Not Supported Yet!"
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~Intent Handlers~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
