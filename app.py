@@ -159,9 +159,7 @@ with open("general_coronavirus_info.json") as json_file:
     general_coronavirus_info = json.load(json_file)
 
 def handle_general_coronavirus_info(intent):
-    for item in general_coronavirus_info["general_intents"]:
-        if item["intent"] == intent:
-            return item["response"]
+    return general_coronavirus_info[intent][0]["response"]
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~Main Function~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

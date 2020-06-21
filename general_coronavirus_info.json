@@ -1,90 +1,107 @@
-{ "general_intents":
-    [
+{
+    "covid_definition": [
         {
-            "intent": "covid_definition", 
             "response": "A novel coronavirus is a new coronavirus that has not been previously identified. The virus causing coronavirus disease 2019 (COVID-19), is not the same as the coronaviruses that commonly circulate among humans and cause mild illness, like the common cold"
-        },
-        {
-            "intent": "covid_spread", 
-            "response": "The virus that causes COVID-19 is thought to spread mainly from person to person, mainly through respiratory droplets produced when an infected person coughs, sneezes, or talks. These droplets can land in the mouths or noses of people who are nearby or possibly be inhaled into the lungs. Spread is more likely when people are in close contact with one another (within about 6 feet). \n COVID-19 seems to be spreading easily and sustainably in the community (“community spread”) in many affected geographic areas. Community spread means people have been infected with the virus in an area, including some who are not sure how or where they became infected."
-        },
-        {
-            "intent": "covid_symptoms", 
-            "response": "People with COVID-19 have had a wide range of symptoms reported – ranging from mild symptoms to severe illness. \n Symptoms may appear 2-14 days after exposure to the virus. People with these symptoms may have COVID-19: \n Fever or chills \n Cough \n Shortness of breath or difficulty breathing \n Fatigue \n Muscle or body aches \n Headache \n New loss of taste or smell \n Sore throat \n Congestion or runny nose \n Nausea or vomiting \n Diarrhea \n This list does not include all possible symptoms. CDC will continue to update this list as we learn more about COVID-19."
-        },
-        {
-            "intent": "safe_actions", 
-            "response": "Stay home if possible.\n Wash your hands often. \n Take everyday precautions to keep space between yourself and others (stay 6 feet away, which is about two arm lengths). \n Keep away from people who are sick. \n Stock up on supplies. \n Clean and disinfect frequently touched services.\n Avoid all cruise travel and non-essential air travel.\n Continue your medications and do not change your treatment plan without talking to your doctor.\n Have at least a 2-week supply of prescription and non-prescription medications. Talk to your healthcare provider, insurer, and pharmacist about getting an extra supply (i.e., more than two weeks) of prescription medications, if possible, to reduce trips to the pharmacy. \n Talk to your healthcare provider about whether your vaccinations are up-to-date. People older than 65 years, and those with many underlying conditions, such as those who are immunocompromised or with significant liver disease, are recommended to receive vaccinations against influenza and pneumococcal disease. \n Do not delay getting emergency care for your underlying condition because of COVID-19. Emergency departments have contingency infection prevention plans to protect you from getting COVID-19 if you need care for your underlying condition. \n Call your healthcare provider if you have any concerns about your underlying medical conditions or if you get sick and think that you may have COVID-19. If you need emergency help, call 911.\n"
-        },
-        {
-            "intent": "safe_actions_neighborhood", 
-            "response": "As communities and businesses are opening, you may be looking for ways to resume some daily activities as safely as possible. While there is no way to ensure zero risk of infection, it is important to understand potential risks and how to adopt different types of prevention measures to protect yourself and to help reduce the spread of COVID-19. As a reminder, if you have COVID-19, have symptoms consistent with COVID-19, or have been in close contact with someone who has COVID-19, it is important to stay home and away from other people. When you can leave home and be around others depends on different factors for different situations. Follow CDC’s recommendations for your circumstances. \n Keep these items on hand when venturing out: a cloth face covering, tissues, and a hand sanitizer with at least 60% alcohol, if possible."
-        },
-        {
-            "intent": "elder_vulnerability", 
-            "response": "COVID-19 is a new disease and there is limited information regarding risk factors for severe illness. Based on currently available information and clinical expertise, older adults and people of any age who have serious underlying medical conditions might be at higher risk for severe illness from COVID-19."
-        },
-        {
-            "intent": "pet_vulnerability", 
-            "response": "A small number of pets worldwide, including cats and dogs, have been reportedexternal icon to be infected with the virus that causes COVID-19, mostly after close contact with people with COVID-19.\nBased on the limited information available to date, the risk of animals spreading COVID-19 to people is considered to be low.\nIt appears that the virus that causes COVID-19 can spread from people to animals in some situations.\nTreat pets as you would other human family members – do not let pets interact with people outside the household.\nIf a person inside the household becomes sick, isolate that person from everyone else, including pets.\nThis is a rapidly evolving situation and information will be updated as it becomes available."
-        },
-        {
-            "intent": "inperson_hangout", 
-            "response": "Limiting face-to-face contact with others is the best way to reduce the spread of coronavirus disease 2019 (COVID-19).\n Social distancing, also called “physical distancing,” means keeping space between yourself and other people outside of your home. \n To practice social or physical distancing stay at least 6 feet (about 2 arms’ length) from other people. \n In addition to everyday steps to prevent COVID-19, keeping space between you and others is one of the best tools we have to avoid being exposed to this virus and slowing its spread locally and across the country and world. \n Limit close contact with others outside your household in indoor and outdoor spaces. Since people can spread the virus before they know they are sick, it is important to stay away from others when possible, even if you—or they—have no symptoms. Social distancing is especially important for people who are at higher risk for severe illness from COVID-19."
-        },
-        {
-            "intent":"covid_coping",
-            "response": "Take breaks from watching, reading, or listening to news stories and social media. Hearing about the pandemic repeatedly can be upsetting.\n Take care of your body. Take deep breaths, stretch, or meditate. Try to eat healthy, well-balanced meals, exercise regularly, get plenty of sleep, and avoid alcohol and drugs.\n Make time to unwind. Try to do some other activities you enjoy.\nConnect with others. Talk with people you trust about your concerns and how you are feeling.\nCall your healthcare provider if stress gets in the way of your daily activities for several days in a row."
-        },
-        {
-            "intent":"plan_if_sick",
-            "response": "Know how to stay in touch with others by phone or email. You may need to ask for help from friends, family, neighbors, and community health workers if you become sick. \n Determine who can care for you if your caregiver gets sick.\nContact your healthcare provider to ask about obtaining extra necessary medications to have on hand in case there is an outbreak of COVID-19 in your community and you need to stay home for a prolonged period of time. \n If you cannot get extra medications, consider using mail-order for medications. \n Be sure you have over-the-counter medicines and medical supplies (tissues, etc.) to treat fever and other symptoms. Most people will be able to recover from COVID-19 at home. \n Have enough household items and groceries on hand so that you will be prepared to stay at home. \n Consider ways of getting medications and food brought to your house through family, social, or commercial networks. \n Have a plan for someone to care for your pets during your illness."
-        },
-        {
-            "intent":"actions_if_sick",
-            "response": "If you or someone is showing any of these signs, seek emergency medical care immediately: \n Trouble breathing \n Persistent pain or pressure in the chest \n New confusion \n Inability to wake or stay awake \n Bluish lips or face \n *This list is not all possible symptoms. Please call your medical provider for any other symptoms that are severe or concerning to you. \n Call 911 or call ahead to your local emergency facility: Notify the operator that you are seeking care for someone who has or may have COVID-19."
-        },
-        {
-            "intent":"food_concerns",
-            "response": "Coronaviruses, like the one that causes COVID-19, are thought to spread mostly person-to-person through respiratory droplets when someone coughs, sneezes, or talks. It is possible that a person can get COVID-19 by touching a surface or object, including food or food packaging, that has the virus on it and then touching their own mouth, nose, or possibly their eyes. However, this is not thought to be the main way the virus spreads. Currently, there is no evidence to suggest that handling food or consuming food is associated with COVID-19. \n After shopping, handling food packages, or before preparing or eating food, it is important to always wash your hands with soap and water for at least 20 seconds. If soap and water are not available, use a hand sanitizer that contains at least 60% alcohol. Cover all surfaces of your hands and rub them together until they feel dry. Remember, it is always important to follow good food safety practices to reduce the risk of illness from common foodborne pathogens "
-        }, 
-        {
-            "intent":"nursing_home_concern",
-            "response": "Many cases of COVID-19 in the U.S. have occurred among older adults living in nursing homes or long-term care facilities \n Actions to take:\n Carefully follow your facility’s instructions for infection prevention. \n Notify staff right away if you feel sick. \n Ask your caretakers about the actions that are being taken at your nursing home or long-term care facility to protect you and your loved ones, including if and how they are limiting visitors. \nWhy you might be at higher risk \n The communal nature of nursing homes and long-term care facilities, and the population served (generally older adults often with underlying medical conditions), put those living in nursing homes at higher risk of infection and severe illness from COVID-19."
-        },
-        {
-            "intent":"immunocompromised_concern",
-            "response": "Many conditions and treatments can cause a person to have a weakened immune system (immunocompromised), including cancer treatment, bone marrow or organ transplantation, immune deficiencies, HIV with a low CD4 cell count or not on HIV treatment, and prolonged use of corticosteroids and other immune weakening medications.\nActions to take:\n If you are immunocompromised, continue any recommended medications or treatments and follow the advice of your healthcare provider.\n Call your healthcare provider if you have concerns about your condition or feel sick.\nWhy you might be at higher risk\n People with a weakened immune system have reduced ability to fight infectious diseases, including viruses like COVID-19. Knowledge is limited about the virus that causes COVID-19, but based on similar viruses, there is concern that immunocompromised patients may remain infectious for longer than other COVID-19 patients."
-        },
-        {
-            "intent":"asthma_concern",
-            "response": "Moderate-to-severe asthma may put people at higher risk for severe illness from COVID-19.\nActions to take:\n Follow your Asthma Action Plan.\n Keep your asthma under control.\n Continue your current medications, including any inhalers with steroids in them (“steroids” is another word for corticosteroids).\n Know how to use your inhaler.\n Avoid your asthma triggers.\n If possible, have another member of your household who doesn’t have asthma clean and disinfect your house for you. When they use cleaning and disinfecting products, have them:\n Make sure that people with asthma are not in the room.\n Minimize use of disinfectants that can cause an asthma attack.\n Open windows or doors and use a fan that blows air outdoors.\n Always follow the instructions on the product label.\n Spray or pour spray products onto a cleaning cloth or paper towel instead of spraying the product directly onto the cleaning surface (if the product label allows).\nWhy you might be at higher risk\n COVID-19 can affect your respiratory tract (nose, throat, lungs), cause an asthma attack, and possibly lead to pneumonia and serious illness."
-        },
-        {
-            "intent":"kidney_concern",
-            "response": "Chronic kidney disease being treated with dialysis may increase a person’s risk for severe illness from COVID-19.\nActions to take:\n If you are on dialysis, you should NOT miss your treatments.\n Contact your dialysis clinic and your healthcare provider if you feel sick or have concerns.\n Plan to have enough food on hand to follow the KCER 3-Day Emergency Diet Plan pdf icon[PDF – 8 pages]external icon for dialysis patients in case you are unable to maintain your normal treatment schedule.\nWhy you might be at higher risk\n Dialysis patients are more prone to infection and severe illness because of weakened immune systems; treatments and procedures to manage kidney failure; and coexisting conditions such as diabetes."
-        },
-        {
-            "intent":"diabetes_concern",
-            "response": "Diabetes, including type 1, type 2, or gestational, may put people at higher risk of severe illness from COVID-19.\nActions to take: \n Continue taking your diabetes pills and insulin as usual.\n Test your blood sugar every four hours and keep track of the results.\n Make sure that you have at least a two-week supply of your diabetes pills and insulin.\n Follow the sick day guidelines for people with diabetes.\nWhy you might be at higher risk\n People with diabetes whose blood sugar levels are often higher than their target are more likely to have diabetes-related health problems. Those health problems can make it harder to overcome COVID-19."
-        },
-        {
-            "intent":"hemoglobin_concern",
-            "response": "Hemoglobin disorders such as sickle cell disease (SCD) and thalassemia may put people at higher risk for severe illness from COVID-19.\nActions to take:\n Ask your healthcare provider about telemedicine or remote healthcare visits, and know when to go to the emergency department.\n Work with your healthcare provider to manage medications and therapies for your disorder (including hydroxyurea, chelation therapy, blood transfusions, and prescriptions for pain management) and any other health condition you may have (such as diabetes, high blood pressure, and arthritis).\n Try to prevent vaso-occlusive episodes or pain crises by avoiding possible triggers.\n Review our healthy living with SCD guide or our healthy living with thalassemia guide for tips to help you stay healthy.\n Find SCD resources and thalassemia resources to help navigate care and increase knowledge and awareness of SCD and thalassemia.\n Let friends and family know about the need for healthy blood donors.\nWhy you might be at higher risk\n Living with a hemoglobin disorder can lead to serious multi-organ complications, and underlying medical conditions (such as heart disease, liver disease, diabetes, iron overload, kidney disease, viral infections, or weakened immune system) may increase the risk of severe illness from COVID-19."
-        },        
-        {
-            "intent":"liver_concern",
-            "response": "Chronic liver disease, including cirrhosis, may increase risk for serious illness from COVID-19.\nActions to take:\n Take your medications exactly as prescribed.\nWhy you might be at higher risk\n Severe illness caused by COVID-19 and the medications used to treat some severe consequences of COVID-19 can cause strain on the liver, particularly for those with underlying liver problems. People living with serious liver disease can have a weakened immune system, leaving the body less able to fight COVID-19."
-        },
-        {
-            "intent":"heart_concern",
-            "response": "Serious heart conditions, including heart failure, coronary artery disease, congenital heart disease, cardiomyopathies, and pulmonary hypertension, may put people at higher risk for severe illness from COVID-19.\nActions to take:\n Take your medication exactly as prescribed. Continue angiotensin converting enzyme inhibitors (ACE-I) or angiotensin-II receptor blockers (ARB) as prescribed by your healthcare provider for indications such as heart failure or high blood pressure. This is recommended by current clinical guidelines.\n Make sure that you have at least a two-week supply of your heart disease medications (such as those to treat high cholesterol and high blood pressure).\n People with hypertension should continue to manage and control their blood pressure and take their medication as directed.\nWhy you might be at higher risk\n COVID-19, like other viral illnesses such as the flu, can damage the respiratory system and make it harder for your heart to work. For people with heart failure and other serious heart conditions this can lead to a worsening of COVID-19 symptoms. "
-        },
-        {
-            "intent":"obesity_concern",
-            "response": "Actions to take:\n Take your medications for any underlying health conditions exactly as prescribed.\nWhy you might be at higher risk\n Severe obesity increases the risk of a serious breathing problem called acute respiratory distress syndrome (ARDS), which is a major complication of COVID-19 and can cause difficulties with a doctor’s ability to provide respiratory support for seriously ill patients. People living with severe obesity can have multiple serious chronic diseases and underlying health conditions that can increase the risk of severe illness from COVID-19. "
         }
-    
+    ],
+    "covid_spread": [
+        {
+            "response": "The virus that causes COVID-19 is thought to spread mainly from person to person, mainly through respiratory droplets produced when an infected person coughs, sneezes, or talks. These droplets can land in the mouths or noses of people who are nearby or possibly be inhaled into the lungs. Spread is more likely when people are in close contact with one another (within about 6 feet). \n COVID-19 seems to be spreading easily and sustainably in the community (\u201ccommunity spread\u201d) in many affected geographic areas. Community spread means people have been infected with the virus in an area, including some who are not sure how or where they became infected."
+        }
+    ],
+    "covid_symptoms": [
+        {
+            "response": "People with COVID-19 have had a wide range of symptoms reported \u2013 ranging from mild symptoms to severe illness. \n Symptoms may appear 2-14 days after exposure to the virus. People with these symptoms may have COVID-19: \n Fever or chills \n Cough \n Shortness of breath or difficulty breathing \n Fatigue \n Muscle or body aches \n Headache \n New loss of taste or smell \n Sore throat \n Congestion or runny nose \n Nausea or vomiting \n Diarrhea \n This list does not include all possible symptoms. CDC will continue to update this list as we learn more about COVID-19."
+        }
+    ],
+    "safe_actions": [
+        {
+            "response": "Stay home if possible.\n Wash your hands often. \n Take everyday precautions to keep space between yourself and others (stay 6 feet away, which is about two arm lengths). \n Keep away from people who are sick. \n Stock up on supplies. \n Clean and disinfect frequently touched services.\n Avoid all cruise travel and non-essential air travel.\n Continue your medications and do not change your treatment plan without talking to your doctor.\n Have at least a 2-week supply of prescription and non-prescription medications. Talk to your healthcare provider, insurer, and pharmacist about getting an extra supply (i.e., more than two weeks) of prescription medications, if possible, to reduce trips to the pharmacy. \n Talk to your healthcare provider about whether your vaccinations are up-to-date. People older than 65 years, and those with many underlying conditions, such as those who are immunocompromised or with significant liver disease, are recommended to receive vaccinations against influenza and pneumococcal disease. \n Do not delay getting emergency care for your underlying condition because of COVID-19. Emergency departments have contingency infection prevention plans to protect you from getting COVID-19 if you need care for your underlying condition. \n Call your healthcare provider if you have any concerns about your underlying medical conditions or if you get sick and think that you may have COVID-19. If you need emergency help, call 911.\n"
+        }
+    ],
+    "safe_actions_neighborhood": [
+        {
+            "response": "As communities and businesses are opening, you may be looking for ways to resume some daily activities as safely as possible. While there is no way to ensure zero risk of infection, it is important to understand potential risks and how to adopt different types of prevention measures to protect yourself and to help reduce the spread of COVID-19. As a reminder, if you have COVID-19, have symptoms consistent with COVID-19, or have been in close contact with someone who has COVID-19, it is important to stay home and away from other people. When you can leave home and be around others depends on different factors for different situations. Follow CDC\u2019s recommendations for your circumstances. \n Keep these items on hand when venturing out: a cloth face covering, tissues, and a hand sanitizer with at least 60% alcohol, if possible."
+        }
+    ],
+    "elder_vulnerability": [
+        {
+            "response": "COVID-19 is a new disease and there is limited information regarding risk factors for severe illness. Based on currently available information and clinical expertise, older adults and people of any age who have serious underlying medical conditions might be at higher risk for severe illness from COVID-19."
+        }
+    ],
+    "pet_vulnerability": [
+        {
+            "response": "A small number of pets worldwide, including cats and dogs, have been reportedexternal icon to be infected with the virus that causes COVID-19, mostly after close contact with people with COVID-19.\nBased on the limited information available to date, the risk of animals spreading COVID-19 to people is considered to be low.\nIt appears that the virus that causes COVID-19 can spread from people to animals in some situations.\nTreat pets as you would other human family members \u2013 do not let pets interact with people outside the household.\nIf a person inside the household becomes sick, isolate that person from everyone else, including pets.\nThis is a rapidly evolving situation and information will be updated as it becomes available."
+        }
+    ],
+    "inperson_hangout": [
+        {
+            "response": "Limiting face-to-face contact with others is the best way to reduce the spread of coronavirus disease 2019 (COVID-19).\n Social distancing, also called \u201cphysical distancing,\u201d means keeping space between yourself and other people outside of your home. \n To practice social or physical distancing stay at least 6 feet (about 2 arms\u2019 length) from other people. \n In addition to everyday steps to prevent COVID-19, keeping space between you and others is one of the best tools we have to avoid being exposed to this virus and slowing its spread locally and across the country and world. \n Limit close contact with others outside your household in indoor and outdoor spaces. Since people can spread the virus before they know they are sick, it is important to stay away from others when possible, even if you\u2014or they\u2014have no symptoms. Social distancing is especially important for people who are at higher risk for severe illness from COVID-19."
+        }
+    ],
+    "covid_coping": [
+        {
+            "response": "Take breaks from watching, reading, or listening to news stories and social media. Hearing about the pandemic repeatedly can be upsetting.\n Take care of your body. Take deep breaths, stretch, or meditate. Try to eat healthy, well-balanced meals, exercise regularly, get plenty of sleep, and avoid alcohol and drugs.\n Make time to unwind. Try to do some other activities you enjoy.\nConnect with others. Talk with people you trust about your concerns and how you are feeling.\nCall your healthcare provider if stress gets in the way of your daily activities for several days in a row."
+        }
+    ],
+    "plan_if_sick": [
+        {
+            "response": "Know how to stay in touch with others by phone or email. You may need to ask for help from friends, family, neighbors, and community health workers if you become sick. \n Determine who can care for you if your caregiver gets sick.\nContact your healthcare provider to ask about obtaining extra necessary medications to have on hand in case there is an outbreak of COVID-19 in your community and you need to stay home for a prolonged period of time. \n If you cannot get extra medications, consider using mail-order for medications. \n Be sure you have over-the-counter medicines and medical supplies (tissues, etc.) to treat fever and other symptoms. Most people will be able to recover from COVID-19 at home. \n Have enough household items and groceries on hand so that you will be prepared to stay at home. \n Consider ways of getting medications and food brought to your house through family, social, or commercial networks. \n Have a plan for someone to care for your pets during your illness."
+        }
+    ],
+    "actions_if_sick": [
+        {
+            "response": "If you or someone is showing any of these signs, seek emergency medical care immediately: \n Trouble breathing \n Persistent pain or pressure in the chest \n New confusion \n Inability to wake or stay awake \n Bluish lips or face \n *This list is not all possible symptoms. Please call your medical provider for any other symptoms that are severe or concerning to you. \n Call 911 or call ahead to your local emergency facility: Notify the operator that you are seeking care for someone who has or may have COVID-19."
+        }
+    ],
+    "food_concerns": [
+        {
+            "response": "Coronaviruses, like the one that causes COVID-19, are thought to spread mostly person-to-person through respiratory droplets when someone coughs, sneezes, or talks. It is possible that a person can get COVID-19 by touching a surface or object, including food or food packaging, that has the virus on it and then touching their own mouth, nose, or possibly their eyes. However, this is not thought to be the main way the virus spreads. Currently, there is no evidence to suggest that handling food or consuming food is associated with COVID-19. \n After shopping, handling food packages, or before preparing or eating food, it is important to always wash your hands with soap and water for at least 20 seconds. If soap and water are not available, use a hand sanitizer that contains at least 60% alcohol. Cover all surfaces of your hands and rub them together until they feel dry. Remember, it is always important to follow good food safety practices to reduce the risk of illness from common foodborne pathogens "
+        }
+    ],
+    "nursing_home_concern": [
+        {
+            "response": "Many cases of COVID-19 in the U.S. have occurred among older adults living in nursing homes or long-term care facilities \n Actions to take:\n Carefully follow your facility\u2019s instructions for infection prevention. \n Notify staff right away if you feel sick. \n Ask your caretakers about the actions that are being taken at your nursing home or long-term care facility to protect you and your loved ones, including if and how they are limiting visitors. \nWhy you might be at higher risk \n The communal nature of nursing homes and long-term care facilities, and the population served (generally older adults often with underlying medical conditions), put those living in nursing homes at higher risk of infection and severe illness from COVID-19."
+        }
+    ],
+    "immunocompromised_concern": [
+        {
+            "response": "Many conditions and treatments can cause a person to have a weakened immune system (immunocompromised), including cancer treatment, bone marrow or organ transplantation, immune deficiencies, HIV with a low CD4 cell count or not on HIV treatment, and prolonged use of corticosteroids and other immune weakening medications.\nActions to take:\n If you are immunocompromised, continue any recommended medications or treatments and follow the advice of your healthcare provider.\n Call your healthcare provider if you have concerns about your condition or feel sick.\nWhy you might be at higher risk\n People with a weakened immune system have reduced ability to fight infectious diseases, including viruses like COVID-19. Knowledge is limited about the virus that causes COVID-19, but based on similar viruses, there is concern that immunocompromised patients may remain infectious for longer than other COVID-19 patients."
+        }
+    ],
+    "asthma_concern": [
+        {
+            "response": "Moderate-to-severe asthma may put people at higher risk for severe illness from COVID-19.\nActions to take:\n Follow your Asthma Action Plan.\n Keep your asthma under control.\n Continue your current medications, including any inhalers with steroids in them (\u201csteroids\u201d is another word for corticosteroids).\n Know how to use your inhaler.\n Avoid your asthma triggers.\n If possible, have another member of your household who doesn\u2019t have asthma clean and disinfect your house for you. When they use cleaning and disinfecting products, have them:\n Make sure that people with asthma are not in the room.\n Minimize use of disinfectants that can cause an asthma attack.\n Open windows or doors and use a fan that blows air outdoors.\n Always follow the instructions on the product label.\n Spray or pour spray products onto a cleaning cloth or paper towel instead of spraying the product directly onto the cleaning surface (if the product label allows).\nWhy you might be at higher risk\n COVID-19 can affect your respiratory tract (nose, throat, lungs), cause an asthma attack, and possibly lead to pneumonia and serious illness."
+        }
+    ],
+    "kidney_concern": [
+        {
+            "response": "Chronic kidney disease being treated with dialysis may increase a person\u2019s risk for severe illness from COVID-19.\nActions to take:\n If you are on dialysis, you should NOT miss your treatments.\n Contact your dialysis clinic and your healthcare provider if you feel sick or have concerns.\n Plan to have enough food on hand to follow the KCER 3-Day Emergency Diet Plan pdf icon[PDF \u2013 8 pages]external icon for dialysis patients in case you are unable to maintain your normal treatment schedule.\nWhy you might be at higher risk\n Dialysis patients are more prone to infection and severe illness because of weakened immune systems; treatments and procedures to manage kidney failure; and coexisting conditions such as diabetes."
+        }
+    ],
+    "diabetes_concern": [
+        {
+            "response": "Diabetes, including type 1, type 2, or gestational, may put people at higher risk of severe illness from COVID-19.\nActions to take: \n Continue taking your diabetes pills and insulin as usual.\n Test your blood sugar every four hours and keep track of the results.\n Make sure that you have at least a two-week supply of your diabetes pills and insulin.\n Follow the sick day guidelines for people with diabetes.\nWhy you might be at higher risk\n People with diabetes whose blood sugar levels are often higher than their target are more likely to have diabetes-related health problems. Those health problems can make it harder to overcome COVID-19."
+        }
+    ],
+    "hemoglobin_concern": [
+        {
+            "response": "Hemoglobin disorders such as sickle cell disease (SCD) and thalassemia may put people at higher risk for severe illness from COVID-19.\nActions to take:\n Ask your healthcare provider about telemedicine or remote healthcare visits, and know when to go to the emergency department.\n Work with your healthcare provider to manage medications and therapies for your disorder (including hydroxyurea, chelation therapy, blood transfusions, and prescriptions for pain management) and any other health condition you may have (such as diabetes, high blood pressure, and arthritis).\n Try to prevent vaso-occlusive episodes or pain crises by avoiding possible triggers.\n Review our healthy living with SCD guide or our healthy living with thalassemia guide for tips to help you stay healthy.\n Find SCD resources and thalassemia resources to help navigate care and increase knowledge and awareness of SCD and thalassemia.\n Let friends and family know about the need for healthy blood donors.\nWhy you might be at higher risk\n Living with a hemoglobin disorder can lead to serious multi-organ complications, and underlying medical conditions (such as heart disease, liver disease, diabetes, iron overload, kidney disease, viral infections, or weakened immune system) may increase the risk of severe illness from COVID-19."
+        }
+    ],
+    "liver_concern": [
+        {
+            "response": "Chronic liver disease, including cirrhosis, may increase risk for serious illness from COVID-19.\nActions to take:\n Take your medications exactly as prescribed.\nWhy you might be at higher risk\n Severe illness caused by COVID-19 and the medications used to treat some severe consequences of COVID-19 can cause strain on the liver, particularly for those with underlying liver problems. People living with serious liver disease can have a weakened immune system, leaving the body less able to fight COVID-19."
+        }
+    ],
+    "heart_concern": [
+        {
+            "response": "Serious heart conditions, including heart failure, coronary artery disease, congenital heart disease, cardiomyopathies, and pulmonary hypertension, may put people at higher risk for severe illness from COVID-19.\nActions to take:\n Take your medication exactly as prescribed. Continue angiotensin converting enzyme inhibitors (ACE-I) or angiotensin-II receptor blockers (ARB) as prescribed by your healthcare provider for indications such as heart failure or high blood pressure. This is recommended by current clinical guidelines.\n Make sure that you have at least a two-week supply of your heart disease medications (such as those to treat high cholesterol and high blood pressure).\n People with hypertension should continue to manage and control their blood pressure and take their medication as directed.\nWhy you might be at higher risk\n COVID-19, like other viral illnesses such as the flu, can damage the respiratory system and make it harder for your heart to work. For people with heart failure and other serious heart conditions this can lead to a worsening of COVID-19 symptoms. "
+        }
+    ],
+    "obesity_concern": [
+        {
+            "response": "Actions to take:\n Take your medications for any underlying health conditions exactly as prescribed.\nWhy you might be at higher risk\n Severe obesity increases the risk of a serious breathing problem called acute respiratory distress syndrome (ARDS), which is a major complication of COVID-19 and can cause difficulties with a doctor\u2019s ability to provide respiratory support for seriously ill patients. People living with severe obesity can have multiple serious chronic diseases and underlying health conditions that can increase the risk of severe illness from COVID-19. "
+        }
     ]
 }
-
