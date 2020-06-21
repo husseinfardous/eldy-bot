@@ -1,117 +1,70 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import os
-import requests
-from sys import argv
+
+from flask import Flask, request, jsonify
+from pymessenger import Bot
 from wit import Wit
-from bottle import Bottle, request, debug
 
-# Wit.ai parameters
-WIT_TOKEN = os.environ.get('WIT_TOKEN')
-# Messenger API parameters
-FB_PAGE_TOKEN = os.environ.get('FB_PAGE_TOKEN')
-# A user secret to verify webhook get request.
-FB_VERIFY_TOKEN = os.environ.get('FB_VERIFY_TOKEN')
+app = Flask(__name__)
 
-# Setup Bottle Server
-debug(True)
-app = Bottle()
+# ~~~~~~~~~~Parameters~~~~~~~~~~
 
+# Webserver Parameter
+port = os.environ.get("PORT") or 8445
 
-# Facebook Messenger GET Webhook
-@app.get('/webhook')
-def messenger_webhook():
-    """
-    A webhook to return a challenge
-    """
-    verify_token = request.query.get('hub.verify_token')
-    # check whether the verify tokens match
-    if verify_token == FB_VERIFY_TOKEN:
-        # respond with the challenge to confirm
-        challenge = request.query.get('hub.challenge')
-        return challenge
-    else:
-        return 'Invalid Request or Verification Token'
+# Wit.ai Parameters
+WIT_TOKEN = os.environ.get("WIT_TOKEN")
+
+# Messenger API Parameters
+FB_PAGE_TOKEN = os.environ.get("FB_PAGE_TOKEN")
+if not FB_PAGE_TOKEN:
+    raise ValueError("Missing FB PAGE TOKEN!")
+FB_APP_SECRET = os.environ.get("FB_APP_SECRET")
+if not FB_APP_SECRET:
+    raise ValueError("Missing FB APP SECRET!")
+
+# ~~~~~~~~~~Messenger API~~~~~~~~~~
 
 
-# Facebook Messenger POST Webhook
-@app.post('/webhook')
-def messenger_post():
-    """
-    Handler for webhook (currently for postback and messages)
-    """
-    data = request.json
+
+# ~~~~~~~~~~Wit.ai Bot~~~~~~~~~~
+
+#client = Wit(WIT_TOKEN)
+
+bot = Bot(FB_PAGE_TOKEN)
+
+# Webhook Setup
+@app.route("/", methods=["GET"])
+def verify():
+    # When the endpoint is registered as a webhook, it must echo back the "hub.challenge" value it receives in the query arguments
+    if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
+        if not request.args.get("hub.verify_token") == os.environ.get("FB_VERIFY_TOKEN"):
+            return "Verification Token Mismatch!", 403
+        return request.args["hub.challenge"], 200
+    return "Hello World!", 200
+
+# Message Handler
+@app.route("/", methods=["POST"])
+def webhook():
+    
+    data = request.get_json()
+
     if data['object'] == 'page':
         for entry in data['entry']:
-            # get all the messages
-            messages = entry['messaging']
-            if messages[0]:
-                # Get the first message
-                message = messages[0]
-                # Yay! We got a new message!
-                # We retrieve the Facebook user ID of the sender
-                fb_id = message['sender']['id']
-                # We retrieve the message content
-                text = message['message']['text']
-                # Let's forward the message to Wit /message
-                # and customize our response to the message in handle_message
-                response = client.message(msg=text, context={'session_id':fb_id})
-                handle_message(response=response, fb_id=fb_id)
-    else:
-        # Returned another event
-        return 'Received Different Event'
-    return None
+            for messaging_event in entry['messaging']:
 
+                # IDs
+                sender_id = messaging_event['sender']['id']
+                recipient_id = messaging_event['recipient']['id']
 
-def fb_message(sender_id, text):
-    """
-    Function for returning response to messenger
-    """
-    data = {
-        'recipient': {'id': sender_id},
-        'message': {'text': text}
-    }
-    # Setup the query string with your PAGE TOKEN
-    qs = 'access_token=' + FB_PAGE_TOKEN
-    # Send POST request to messenger
-    resp = requests.post('https://graph.facebook.com/me/messages?' + qs,
-                         json=data)
-    return resp.content
+                if messaging_event.get('message'):
+                    # Extracting text message
+                    if 'text' in messaging_event['message']:
+                        messaging_text = messaging_event['message']['text']
+                    else:
+                        messaging_text = 'no text'
 
+                    # Echo
+                    response = messaging_text
+                    bot.send_text_message(sender_id, response)
 
-def first_trait_value(traits, trait):
-    """
-    Returns first trait value
-    """
-    if trait not in traits:
-        return None
-    val = traits[trait][0]['value']
-    if not val:
-        return None
-    return val
-
-
-def handle_message(response, fb_id):
-    """
-    Customizes our response to the message and sends it
-    """
-    # Checks if user's message is a greeting
-    # Otherwise we will just repeat what they sent us
-    greetings = first_trait_value(response['traits'], 'wit$greetings')
-    if greetings:
-        text = "hello!"
-    else:
-        text = "We've received your message: " + response['_text']
-    # send message
-    fb_message(fb_id, text)
-
-
-# Setup Wit Client
-client = Wit(access_token=WIT_TOKEN)
-
-if __name__ == '__main__':
-    # Run Server
-    app.run(host='0.0.0.0', port=8080)
+    return "ok", 200
