@@ -6,6 +6,8 @@ from wit import Wit
 
 app = Flask(__name__)
 
+
+
 # ~~~~~~~~~~Parameters~~~~~~~~~~
 
 # Web Server Parameter
@@ -22,9 +24,7 @@ if not FB_APP_SECRET:
 # Wit.ai Parameters
 WIT_TOKEN = os.environ.get("WIT_TOKEN")
 
-# ~~~~~~~~~~Wit.ai Bot~~~~~~~~~~
 
-#client = Wit(WIT_TOKEN)
 
 # ~~~~~~~~~~Facebook Messenger API~~~~~~~~~~
 
@@ -55,20 +55,41 @@ def message_handler():
 
                 # Extract Sender and Recipient IDs
                 sender_id = messaging_event["sender"]["id"]
-                recipient_id = messaging_event["recipient"]["id"]
+                #recipient_id = messaging_event["recipient"]["id"]
 
                 # Extract Text Message
                 if messaging_event.get("message"):
                     if "text" in messaging_event["message"]:
-                        messaging_text = messaging_event["message"]["text"]
+                        message_text = messaging_event["message"]["text"]
                     else:
-                        messaging_text = "No Text"
+                        message_text = ""
 
+                    """
                     # Echo Message
-                    response = messaging_text
+                    response = message_text
                     bot.send_text_message(sender_id, response)
+                    """
+
+                    bot.send_text_message(sender_id, response(message_text))
 
     return "Ok", 200
+
+
+
+# ~~~~~~~~~~Wit.ai~~~~~~~~~~
+
+# Bot
+client = Wit(access_token=WIT_TOKEN)
+
+def response(message_text):
+
+    if message_text == "":
+        return "Invalid Message!"
+
+    wit_response = client.message(message_text)
+    return "Query: " + wit_response["text"] + "; Intent"  + wit_response["intents"][0]["name"]
+
+# ~~~~~~~~~~Main Function~~~~~~~~~~
 
 if __name__ == "__main__":
     app.run(port=port)
