@@ -1,6 +1,7 @@
 import os
+import json
 
-from flask import Flask, request, jsonify
+from flask import Flask, request
 from pymessenger import Bot
 from wit import Wit
 
@@ -8,7 +9,7 @@ app = Flask(__name__)
 
 
 
-# ~~~~~~~~~~Parameters~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~Parameters~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Web Server Parameter
 port = os.environ.get("PORT") or 8445
@@ -26,7 +27,7 @@ WIT_TOKEN = os.environ.get("WIT_TOKEN")
 
 
 
-# ~~~~~~~~~~Facebook Messenger API~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~Facebook Messenger API~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Bot
 bot = Bot(FB_PAGE_TOKEN)
@@ -55,41 +56,111 @@ def message_handler():
 
                 # Extract Sender and Recipient IDs
                 sender_id = messaging_event["sender"]["id"]
-                #recipient_id = messaging_event["recipient"]["id"]
 
                 # Extract Text Message
+
                 if messaging_event.get("message"):
+
                     if "text" in messaging_event["message"]:
                         message_text = messaging_event["message"]["text"]
+                        bot.send_text_message(sender_id, response(message_text))
+                    
                     else:
-                        message_text = ""
-
-                    """
-                    # Echo Message
-                    response = message_text
-                    bot.send_text_message(sender_id, response)
-                    """
-
-                    bot.send_text_message(sender_id, response(message_text))
+                        bot.send_text_message(sender_id, "Invalid Message!")
 
     return "Ok", 200
 
 
 
-# ~~~~~~~~~~Wit.ai~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~Wit.ai~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Bot
 client = Wit(access_token=WIT_TOKEN)
 
 def response(message_text):
-
-    if message_text == "":
-        return "Invalid Message!"
-
+    
     wit_response = client.message(message_text)
-    return "Query: " + wit_response["text"] + "; Intent"  + wit_response["intents"][0]["name"]
 
-# ~~~~~~~~~~Main Function~~~~~~~~~~
+    intent = wit_response["intents"][0]["name"]
+
+    if intent == "covid_definition":
+        return handle_general_coronavirus_info("covid_definition")
+    
+    elif intent == "covid_spread":
+        return handle_general_coronavirus_info("covid_spread")
+    
+    elif intent == "safe_actions":
+        return handle_general_coronavirus_info("safe_actions")
+    
+    elif intent == "food_concerns":
+        return handle_general_coronavirus_info("food_concerns")
+    
+    elif intent == "safe_actions_neighborhood":
+        return handle_general_coronavirus_info("safe_actions_neighborhood")
+    
+    elif intent == "elder_vulnerability":
+        return handle_general_coronavirus_info("elder_vulnerability")
+    
+    elif intent == "covid_coping":
+        return handle_general_coronavirus_info("covid_coping")
+    
+    elif intent == "covid_symptoms":
+        return handle_general_coronavirus_info("covid_symptoms")
+    
+    elif intent == "pet_vulnerability":
+        return handle_general_coronavirus_info("pet_vulnerability")
+    
+    elif intent == "inperson_hangout":
+        return handle_general_coronavirus_info("inperson_hangout")
+
+    elif intent == "actions_if_sick":
+        return handle_general_coronavirus_info("actions_if_sick")
+
+    elif intent == "plan_if_sick":
+        return handle_general_coronavirus_info("plan_if_sick")
+
+    elif intent == "nursing_home_concern":
+        return handle_general_coronavirus_info("nursing_home_concern")
+
+    elif intent == "immunocompromised_concern":
+        return handle_general_coronavirus_info("immunocompromised_concern")
+
+    elif intent == "asthma_concern":
+        return handle_general_coronavirus_info("asthma_concern")
+
+    elif intent == "kidney_concern":
+        return handle_general_coronavirus_info("kidney_concern")
+
+    elif intent == "diabetes_concern":
+        return handle_general_coronavirus_info("diabetes_concern")
+
+    elif intent == "hemoglobin_concern":
+        return handle_general_coronavirus_info("hemoglobin_concern")
+
+    elif intent == "liver_concern":
+        return handle_general_coronavirus_info("liver_concern")
+
+    elif intent == "heart_concern":
+        return handle_general_coronavirus_info("heart_concern")
+
+    elif intent == "obesity_concern":
+        return handle_general_coronavirus_info("obesity_concern")
+    
+    else:
+        return "-___-"
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~Intent Handlers~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+general_coronavirus_info = None
+with open("general_coronavirus_info.json") as json_file:
+    general_coronavirus_info = json.load(json_file)
+
+def handle_general_coronavirus_info(intent):
+    for item in general_coronavirus_info["general_intents"]:
+        if item["intent"] == intent:
+            return item["response"]
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~Main Function~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 if __name__ == "__main__":
     app.run(port=port)
