@@ -8,13 +8,10 @@ app = Flask(__name__)
 
 # ~~~~~~~~~~Parameters~~~~~~~~~~
 
-# Webserver Parameter
+# Web Server Parameter
 port = os.environ.get("PORT") or 8445
 
-# Wit.ai Parameters
-WIT_TOKEN = os.environ.get("WIT_TOKEN")
-
-# Messenger API Parameters
+# Facebook Messenger API Parameters
 FB_PAGE_TOKEN = os.environ.get("FB_PAGE_TOKEN")
 if not FB_PAGE_TOKEN:
     raise ValueError("Missing FB PAGE TOKEN!")
@@ -22,20 +19,22 @@ FB_APP_SECRET = os.environ.get("FB_APP_SECRET")
 if not FB_APP_SECRET:
     raise ValueError("Missing FB APP SECRET!")
 
-# ~~~~~~~~~~Messenger API~~~~~~~~~~
-
-
+# Wit.ai Parameters
+WIT_TOKEN = os.environ.get("WIT_TOKEN")
 
 # ~~~~~~~~~~Wit.ai Bot~~~~~~~~~~
 
 #client = Wit(WIT_TOKEN)
 
+# ~~~~~~~~~~Facebook Messenger API~~~~~~~~~~
+
+# Bot
 bot = Bot(FB_PAGE_TOKEN)
 
 # Webhook Setup
 @app.route("/", methods=["GET"])
-def verify():
-    # When the endpoint is registered as a webhook, it must echo back the "hub.challenge" value it receives in the query arguments
+def webhook_setup():
+    # When the endpoint is registered as a webhook, it must echo back the "hub.challenge" value it receives in the query arguments.
     if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
         if not request.args.get("hub.verify_token") == os.environ.get("FB_VERIFY_TOKEN"):
             return "Verification Token Mismatch!", 403
@@ -44,27 +43,32 @@ def verify():
 
 # Message Handler
 @app.route("/", methods=["POST"])
-def webhook():
+def message_handler():
     
     data = request.get_json()
 
-    if data['object'] == 'page':
-        for entry in data['entry']:
-            for messaging_event in entry['messaging']:
+    if data["object"] == "page":
+        
+        for entry in data["entry"]:
+            
+            for messaging_event in entry["messaging"]:
 
-                # IDs
-                sender_id = messaging_event['sender']['id']
-                recipient_id = messaging_event['recipient']['id']
+                # Extract Sender and Recipient IDs
+                sender_id = messaging_event["sender"]["id"]
+                recipient_id = messaging_event["recipient"]["id"]
 
-                if messaging_event.get('message'):
-                    # Extracting text message
-                    if 'text' in messaging_event['message']:
-                        messaging_text = messaging_event['message']['text']
+                # Extract Text Message
+                if messaging_event.get("message"):
+                    if "text" in messaging_event["message"]:
+                        messaging_text = messaging_event["message"]["text"]
                     else:
-                        messaging_text = 'no text'
+                        messaging_text = "No Text"
 
-                    # Echo
+                    # Echo Message
                     response = messaging_text
                     bot.send_text_message(sender_id, response)
 
-    return "ok", 200
+    return "Ok", 200
+
+if __name__ == "__main__":
+    app.run(port=port)
