@@ -160,25 +160,25 @@ def handle_coronavirus_stats(intent_name, entity_body):
             stat = val_to_str(json_data["covid19"][intent_name][0])
 
             if intent_name == "confirmed":
-                reply_message += loc_type_capitalized + " Wide COVID-19 Confirmed Cases: " + stat + "\n"
+                reply_message += loc_type_capitalized + " Wide COVID-19 Confirmed Cases: " + stat + "\n\n"
 
             elif intent_name == "recovered":
-                reply_message += loc_type_capitalized + " Wide COVID-19 Recoveries: " + stat + "\n"
+                reply_message += loc_type_capitalized + " Wide COVID-19 Recoveries: " + stat + "\n\n"
 
             elif intent_name == "deaths":
-                reply_message += loc_type_capitalized + " Wide COVID-19 Deaths: " + stat + "\n"
+                reply_message += loc_type_capitalized + " Wide COVID-19 Deaths: " + stat + "\n\n"
 
             else:
-                reply_message += loc_type_capitalized + " Wide COVID-19 Tests Performed: " + stat + "\n"
+                reply_message += loc_type_capitalized + " Wide COVID-19 Tests Performed: " + stat + "\n\n"
 
         else:
 
             cases = val_to_str(json_data["covid19"]["confirmed"][0])
             recoveries = val_to_str(json_data["covid19"]["recovered"][0])
             deaths = val_to_str(json_data["covid19"]["deaths"][0])
-            tests = val_to_str(country_json_data["covid19"]["testsPerformed"][0])
+            tests = val_to_str(json_data["covid19"]["testsPerformed"][0])
 
-            return loc_type_capitalized + " Wide COVID-19 Statistics\nConfirmed Cases: " + cases + "\nRecoveries: " + recoveries + "\nDeaths: " + deaths + "\nTests Performed: " + tests + "\n\n\n"
+            return loc_type_capitalized + " Wide COVID-19 Statistics\n\nConfirmed Cases: " + cases + "\nRecoveries: " + recoveries + "\nDeaths: " + deaths + "\nTests Performed: " + tests + "\n\n\n"
 
     return reply_message.rstrip()
 
