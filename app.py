@@ -178,7 +178,7 @@ def handle_coronavirus_stats(intent_name, entity_body):
             deaths = val_to_str(json_data["covid19"]["deaths"][0])
             tests = val_to_str(json_data["covid19"]["testsPerformed"][0])
 
-            return loc_type_capitalized + " Wide COVID-19 Statistics\n\nConfirmed Cases: " + cases + "\nRecoveries: " + recoveries + "\nDeaths: " + deaths + "\nTests Performed: " + tests + "\n\n\n"
+            reply_message += loc_type_capitalized + " Wide COVID-19 Statistics\n\nConfirmed Cases: " + cases + "\nRecoveries: " + recoveries + "\nDeaths: " + deaths + "\nTests Performed: " + tests + "\n\n\n"
 
     return reply_message.rstrip()
 
