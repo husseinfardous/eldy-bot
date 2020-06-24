@@ -100,6 +100,10 @@ supplier_state_dictionary = dict()
 # Timestamp of the last entry added to the Resource Provider Table 
 resource_providers_timestamp = '2020-05-22T03:36:27.000Z'
 
+"""
+~~~~~~~~~~~~~~~~~~~~~JANILL LEMA~~~~~~~~~~~~~
+"""
+
 # ~~~~~Loneliness Prevention~~~~~
 
 companions_interests_to_id = {}
@@ -228,6 +232,10 @@ def response(message_text):
 
         return handle_location(entity_body)
 
+    """
+    ~~~~~~~~~~~~~~~~~~~~~JANILL LEMA~~~~~~~~~~~~~
+    """
+
     elif intent_name == "loneliness":
         return handle_loneliness()
 
@@ -307,6 +315,10 @@ def handle_location(entity_body):
         prev_intent_name = None
         return handle_coronavirus_stats(temp, entity_body)
 
+"""
+~~~~~~~~~~~~~~~~~~~~~JANILL LEMA~~~~~~~~~~~~~
+"""
+
 def handle_loneliness():
     return "I am very sorry to hear that. What are your interests/hobbies? Please write each one followed by a comma so I can connect you with people that have similar interests and that want to mingle with you about them :)"
 
@@ -336,6 +348,10 @@ def val_to_str(val):
     if val is None:
         return "N/A"
     return str(val)
+
+"""
+~~~~~~~~~~~~~~~~~~~~~JANILL LEMA~~~~~~~~~~~~~
+"""
 
 def populate_companions_table_data(table):
 
