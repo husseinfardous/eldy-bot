@@ -108,6 +108,8 @@ geolocator = Nominatim(user_agent="Eldy Bot")
 # Format Reply Message
 def response(message_text):
     
+    global prev_intent_name
+
     wit_response = wit_client.message(message_text)
 
     if wit_response["intents"] == None or len(wit_response["intents"]) == 0:
@@ -208,6 +210,7 @@ def handle_coronavirus_stats(intent_name, entity_body):
     return reply_message.rstrip()
 
 def handle_location(entity_body):
+    global prev_intent_name
     if prev_intent_name is not None:
         temp = prev_intent_name
         prev_intent_name = None
