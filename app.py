@@ -171,43 +171,58 @@ def handle_general_coronavirus_info(intent_name):
 
 def handle_coronavirus_stats(intent_name, entity_body):
 
-    location = geolocator.geocode(entity_body)
-    geocode = location.raw["lat"] + "," + location.raw["lon"]
+    global prev_intent_name
 
-    reply_message = ""
+    location = geolocator.geocode(entity_body, addressdetails=True)
 
-    for loc_type in ["country", "state", "county"]:
+    if location:
 
-        json_data = json.loads(requests.get("https://api.weather.com/v3/wx/disease/tracker/" + loc_type + "/60day?geocode=" + geocode + "&format=json&apiKey=" + WEATHER_COMPANY_API_KEY).text)
-        
-        loc_type_capitalized = loc_type.capitalize()
+        all_loc_types = ["country", "state", "county"]
+        loc_types = []
+        for loc_type in all_loc_types:
+            if loc_type in location.raw["address"]:
+                loc_types.add(loc_type)
 
-        if intent_name != "all_stats":
+        geocode = location.raw["lat"] + "," + location.raw["lon"]
 
-            stat = val_to_str(json_data["covid19"][intent_name][0])
+        reply_message = ""
 
-            if intent_name == "confirmed":
-                reply_message += loc_type_capitalized + " Wide COVID-19 Confirmed Cases: " + stat + "\n\n"
+        for loc_type in loc_types:
 
-            elif intent_name == "recovered":
-                reply_message += loc_type_capitalized + " Wide COVID-19 Recoveries: " + stat + "\n\n"
+            json_data = json.loads(requests.get("https://api.weather.com/v3/wx/disease/tracker/" + loc_type + "/60day?geocode=" + geocode + "&format=json&apiKey=" + WEATHER_COMPANY_API_KEY).text)
+            
+            loc_type_capitalized = loc_type.capitalize()
 
-            elif intent_name == "deaths":
-                reply_message += loc_type_capitalized + " Wide COVID-19 Deaths: " + stat + "\n\n"
+            if intent_name != "all_stats":
+
+                stat = val_to_str(json_data["covid19"][intent_name][0])
+
+                if intent_name == "confirmed":
+                    reply_message += loc_type_capitalized + " Wide COVID-19 Confirmed Cases: " + stat + "\n\n"
+
+                elif intent_name == "recovered":
+                    reply_message += loc_type_capitalized + " Wide COVID-19 Recoveries: " + stat + "\n\n"
+
+                elif intent_name == "deaths":
+                    reply_message += loc_type_capitalized + " Wide COVID-19 Deaths: " + stat + "\n\n"
+
+                else:
+                    reply_message += loc_type_capitalized + " Wide COVID-19 Tests Performed: " + stat + "\n\n"
 
             else:
-                reply_message += loc_type_capitalized + " Wide COVID-19 Tests Performed: " + stat + "\n\n"
 
-        else:
+                cases = val_to_str(json_data["covid19"]["confirmed"][0])
+                recoveries = val_to_str(json_data["covid19"]["recovered"][0])
+                deaths = val_to_str(json_data["covid19"]["deaths"][0])
+                tests = val_to_str(json_data["covid19"]["testsPerformed"][0])
 
-            cases = val_to_str(json_data["covid19"]["confirmed"][0])
-            recoveries = val_to_str(json_data["covid19"]["recovered"][0])
-            deaths = val_to_str(json_data["covid19"]["deaths"][0])
-            tests = val_to_str(json_data["covid19"]["testsPerformed"][0])
+                reply_message += loc_type_capitalized + " Wide COVID-19 Statistics\n\nConfirmed Cases: " + cases + "\nRecoveries: " + recoveries + "\nDeaths: " + deaths + "\nTests Performed: " + tests + "\n\n\n"
 
-            reply_message += loc_type_capitalized + " Wide COVID-19 Statistics\n\nConfirmed Cases: " + cases + "\nRecoveries: " + recoveries + "\nDeaths: " + deaths + "\nTests Performed: " + tests + "\n\n\n"
+        return reply_message.rstrip()
 
-    return reply_message.rstrip()
+    else:
+        prev_intent_name = intent_name
+        return unparsable_location
 
 def handle_location(entity_body):
     global prev_intent_name
