@@ -7,8 +7,11 @@ from wit import Wit
 import json
 import requests
 from requests.auth import HTTPBasicAuth
+import copy
 
 from geopy.geocoders import Nominatim
+
+from nltk.stem.wordnet import WordNetLemmatizer
 
 app = Flask(__name__)
 
@@ -43,10 +46,76 @@ MAPQUEST_API_KEY = os.environ.get("MAPQUEST_API_KEY")
 
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~Facebook Messenger API~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~Global Variables~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# ~~~~~~~~~~General~~~~~~~~~~
+geolocator = Nominatim(user_agent="Eldy Bot")
+lemmatizer = WordNetLemmatizer()
+
+# ~~~~~~~~~~Facebook Messenger API~~~~~~~~~~
 
 # Bot
 bot = Bot(FB_PAGE_TOKEN)
+
+# Default Message Replies for Undesirable Behavior
+unsupported_message = "Sorry, this message isn't supported!"
+unparsable_location = "Sorry, I couldn't quite get that. Please type in the location or address by itself."
+unreadable_location = "Sorry, I couldn't quite understand that. Please type in the location or address in a different format."
+
+# ~~~~~~~~~~Wit.ai~~~~~~~~~~
+
+# Bot
+wit_client = Wit(access_token=WIT_TOKEN)
+
+# Order of Confidence Cutoff
+confidence_cutoff = 0.8
+
+# ~~~~~~~~~~Intent Handling~~~~~~~~~~
+
+# ~~~~~COVID-19 General Information~~~~~
+
+# Load General COVID-19 Information from JSON File
+general_coronavirus_info = None
+with open("general_coronavirus_info.json") as json_file:
+    general_coronavirus_info = json.load(json_file)
+
+# ~~~~~COVID-19 Statistics~~~~~
+
+# Set of Intents within COVID-19 Statsitics Domain
+coronavirus_stats_intents = {"confirmed", "recovered", "deaths", "testsPerformed", "all_stats"}
+
+# Utilized when Location or Address isn't able to be Parsed
+prev_intent_name = None
+
+# ~~~~~Physical, Communal Resources Nearby~~~~~
+
+# Load US States and Abbreviations from JSON File 
+us_states_data = None
+with open("us_states.json") as json_file:
+    us_states_data = json.load(json_file)
+
+# Dictionary of US states map to an array of suppliers residing in that state
+supplier_state_dictionary = dict()
+
+# Timestamp of the last entry added to the Resource Provider Table 
+resource_providers_timestamp = '2020-05-22T03:36:27.000Z'
+
+# ~~~~~Loneliness Prevention~~~~~
+
+companions_interests_to_id = {}
+companions_id_to_info = {}
+companions_info_fields = []
+
+companions_latest_entry_timestamp = None
+
+companions_table = json.loads(requests.get("https://api.airtable.com/v0/app62IQsAsxBquR8C/tblSfz8w4Vi26Pf90?sort%5B0%5D%5Bfield%5D=created_time&sort%5B0%5D%5Bdirection%5D=asc&api_key=" + AIRTABLE_API_KEY, auth=HTTPBasicAuth(AIRTABLE_EMAIL, AIRTABLE_PASSWORD)).text)["records"]
+populate_companions_table_data(companions_table)
+
+ids_to_overlapping_interests = {}
+
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~Facebook Messenger API~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Webhook Setup
 @app.route("/", methods=["GET"])
@@ -89,41 +158,6 @@ def message_handler():
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~Wit.ai~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-# Bot
-wit_client = Wit(access_token=WIT_TOKEN)
-
-# Default Message Replies for Undesirable Behavior
-unsupported_message = "Sorry, this message isn't supported!"
-unparsable_location = "Sorry, I couldn't quite get that. Please type in the location or address by itself."
-unreadable_location = "Sorry, I couldn't quite understand that. Please type in the location or address in a different format."
-
-# Order of Confidence Cutoff
-confidence_cutoff = 0.8
-
-# Load General COVID-19 Information from JSON File
-general_coronavirus_info = None
-with open("general_coronavirus_info.json") as json_file:
-    general_coronavirus_info = json.load(json_file)
-
-# Load US States and Abbreviations from JSON File 
-us_states_data = None
-with open("us_states.json") as json_file:
-    us_states_data = json.load(json_file)
-
-# Utilized when Location or Address isn't able to be Parsed
-prev_intent_name = None
-
-# Set of Intents within COVID-19 Statsitics Domain
-coronavirus_stats_intents = {"confirmed", "recovered", "deaths", "testsPerformed", "all_stats"}
-
-# Dictionary of US states map to an array of suppliers residing in that state
-supplier_state_dictionary = dict()
-
-# Timestamp of the last entry added to the Resource Provider Table 
-resource_providers_timestamp = '2020-05-22T03:36:27.000Z'
-
-geolocator = Nominatim(user_agent="Eldy Bot")
 
 # Format Reply Message
 def response(message_text):
@@ -177,6 +211,12 @@ def response(message_text):
             return unreadable_location
 
         return handle_location(entity_body)
+
+    elif intent_name == "loneliness":
+        return handle_loneliness()
+
+    elif intent_name == "interests":
+        return handle_interests(message_text)
 
     else:
         return handle_goodbye()
@@ -251,15 +291,83 @@ def handle_location(entity_body):
         prev_intent_name = None
         return handle_coronavirus_stats(temp, entity_body)
 
+def handle_loneliness():
+    return "I am very sorry to hear that. What are your interests/hobbies? Please write each one followed by a comma so I can connect you with people that have similar interests and that want to mingle with you about them :)"
+
+def handle_interests(message_text):
+    
+    check_companions_table_update()
+    find_overlapping_interests(message_text)
+
+    reply_message = "Here are your matches!\n\n"
+
+    for match in ids_to_overlapping_interests:
+        reply_message += companions_id_to_info[match]["Name"] + "\n"
+        reply_message += "Common Interests/Hobbies: "
+        for overlapping_interest in ids_to_overlapping_interests[match]:
+            reply_message += overlapping_interest + ", "
+        reply_message.rstrip()[len(reply_message) - 1]
+        reply_message += "\n\n"
+
+    return reply_message.rstrip()[len(reply_message) - 1]
+
 def handle_goodbye():
     return "Thank you for chatting with me today. Stay safe and feel free to chat with me anytime you need to!"
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~Utility Functions~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~Helper Functions~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def val_to_str(val):
     if val is None:
         return "N/A"
     return str(val)
+
+def populate_companions_table_data(table):
+
+    global companions_interests_to_id
+    global companions_id_to_info
+    global companions_info_fields
+    global companions_latest_entry_timestamp
+
+    for record in table:
+        
+        companions_interests_to_id[record["fields"]["Interests/Hobbies"]] = record["id"]
+
+        for field in record["fields"]:
+
+            if field != "Interests/Hobbies" and field != "created_time":
+                
+                companions_info_fields.append(field)
+                
+                if record["id"] in companions_id_to_info:
+                    companions_id_to_info[record["id"]][field] = record["fields"][field]
+                else:
+                    companions_id_to_info[record["id"]] = {field: record["fields"][field]}
+
+    companions_latest_entry_timestamp = table[len(table) - 1]["createdTime"]
+
+def check_companions_table_update():
+    
+    new_records = json.loads(requests.get("https://api.airtable.com/v0/app62IQsAsxBquR8C/tblSfz8w4Vi26Pf90?filterByFormula=CREATED_TIME()+%3E+%22" + companions_latest_entry_timestamp + "%22&api_key=" + AIRTABLE_API_KEY, auth=HTTPBasicAuth(AIRTABLE_EMAIL, AIRTABLE_PASSWORD)).text)["records"]
+
+    if len(new_records) > 0:
+        populate_companions_table_data(new_records)
+
+def find_overlapping_interests(message_text):
+    
+    global ids_to_overlapping_interests
+
+    demand_interests = message_text.split(",")
+
+    for supply_interests in companions_interests_to_id:
+        
+        demand_interests_toks = [lemmatizer.lemmatize(x.lower().strip(), "v") for x in demand_interests]
+
+        supply_interests_toks = [lemmatizer.lemmatize(x.strip(), "v") for x in supply_interests.lower().split(",")]
+
+        overlapping_interests = {supply_interests_tok.capitalize() for demand_interest_tok in demand_interests_toks for supply_interests_tok in supply_interests_toks if supply_interests_tok in demand_interest_tok or demand_interest_tok in supply_interests_tok}
+
+        if len(overlapping_interests) > 0:
+            ids_to_overlapping_interests[companions_interests_to_id[supply_interests]] = copy.deepcopy(overlapping_interests)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~Main Function~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
