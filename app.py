@@ -351,9 +351,9 @@ def handle_supplies(reciever_address):
     check_new_entry_supplier_table()
 
     address_locator= geolocator.geocode(reciever_address, addressdetails=True)
-     if address_locator:
-          find_possible_resource_providers(address_locator.raw['address']['state'], reciever_address, supplies_array)
-     else:
+    if address_locator:
+          find_possible_resource_providers(address_locator.raw['address']['state'], reciever_address, supplies_request)
+    else:
           handle_resource_request()
 
 def handle_resource_request(data=None):
