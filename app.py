@@ -110,7 +110,7 @@ companions_latest_entry_timestamp = None
 
 companions_table = json.loads(requests.get("https://api.airtable.com/v0/app62IQsAsxBquR8C/tblSfz8w4Vi26Pf90?sort%5B0%5D%5Bfield%5D=created_time&sort%5B0%5D%5Bdirection%5D=asc&api_key=" + AIRTABLE_API_KEY, auth=HTTPBasicAuth(AIRTABLE_EMAIL, AIRTABLE_PASSWORD)).text)["records"]
 
-for record in table:
+for record in companions_table:
         
     companions_interests_to_id[record["fields"]["Interests/Hobbies"]] = record["id"]
 
@@ -125,7 +125,7 @@ for record in table:
             else:
                 companions_id_to_info[record["id"]] = {field: record["fields"][field]}
 
-companions_latest_entry_timestamp = table[len(table) - 1]["createdTime"]
+companions_latest_entry_timestamp = companions_table[len(companions_table) - 1]["createdTime"]
 
 ids_to_overlapping_interests = {}
 
