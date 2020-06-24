@@ -181,7 +181,7 @@ def handle_coronavirus_stats(intent_name, entity_body):
         loc_types = []
         for loc_type in all_loc_types:
             if loc_type in location.raw["address"]:
-                loc_types.add(loc_type)
+                loc_types.append(loc_type)
 
         geocode = location.raw["lat"] + "," + location.raw["lon"]
 
