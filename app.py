@@ -11,6 +11,8 @@ import copy
 
 from geopy.geocoders import Nominatim
 
+import nltk
+nltk.download("wordnet")
 from nltk.stem.wordnet import WordNetLemmatizer
 
 app = Flask(__name__)
