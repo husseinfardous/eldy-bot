@@ -130,7 +130,7 @@ def response(message_text):
     
     elif intent_name in coronavirus_stats_intents:
         
-        if wit_response["entities"] == None or wit_response["entities"]["wit$location:location"] == None or len(wit_response["entities"]["wit$location:location"]) == 0:
+        if wit_response["entities"] == None or "wit$location:location" not in wit_response["entities"] or len(wit_response["entities"]["wit$location:location"]) == 0:
             prev_intent_name = intent_name
             return unparsable_location
 
@@ -145,7 +145,7 @@ def response(message_text):
 
     elif intent_name == "location":
 
-        if wit_response["entities"] == None or wit_response["entities"]["wit$location:location"] == None or len(wit_response["entities"]["wit$location:location"]) == 0:
+        if wit_response["entities"] == None or "wit$location:location" not in wit_response["entities"] or len(wit_response["entities"]["wit$location:location"]) == 0:
             return unreadable_location
 
         entity_body = wit_response["entities"]["wit$location:location"][0]["body"]
