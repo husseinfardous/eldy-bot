@@ -232,10 +232,6 @@ def response(message_text):
 
         return handle_location(entity_body)
 
-    """
-    ~~~~~~~~~~~~~~~~~~~~~JANILL LEMA~~~~~~~~~~~~~
-    """
-
     elif intent_name == "loneliness":
         return handle_loneliness()
 
