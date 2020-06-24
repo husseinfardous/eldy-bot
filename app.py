@@ -6,6 +6,7 @@ from wit import Wit
 
 import json
 import requests
+from requests.auth import HTTPBasicAuth
 
 from geopy.geocoders import Nominatim
 
@@ -31,6 +32,14 @@ WIT_TOKEN = os.environ.get("WIT_TOKEN")
 
 # The Weather Company APIs Parameter
 WEATHER_COMPANY_API_KEY = os.environ.get("WEATHER_COMPANY_API_KEY")
+
+# Airtable API Parameters
+AIRTABLE_EMAIL = os.environ.get("AIRTABLE_EMAIL")
+AIRTABLE_PASSWORD = os.environ.get("AIRTABLE_PASSWORD")
+AIRTABLE_API_KEY = os.environ.get("AIRTABLE_API_KEY")
+
+# MapQuest API Parameter
+MAPQUEST_API_KEY = os.environ.get("MAPQUEST_API_KEY")
 
 
 
