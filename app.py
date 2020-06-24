@@ -84,8 +84,10 @@ def message_handler():
 # Bot
 wit_client = Wit(access_token=WIT_TOKEN)
 
-# Unsupported Message Reply
+# Default Message Replies for Undesirable Behavior
 unsupported_message = "Sorry, this message isn't supported!"
+unparsable_location = "Sorry, I couldn't quite get that. Please type in the location or address by itself."
+unreadable_location = "Sorry, I couldn't quite understand that. Please type in the location or address in a different format."
 
 # Order of Confidence Cutoff
 confidence_cutoff = 0.8
@@ -95,8 +97,13 @@ general_coronavirus_info = None
 with open("general_coronavirus_info.json") as json_file:
     general_coronavirus_info = json.load(json_file)
 
+# Utilized when Location or Address isn't able to be Parsed
+prev_intent_name = None
+
 # Set of Intents within COVID-19 Statsitics Domain
 coronavirus_stats_intents = {"confirmed", "recovered", "deaths", "testsPerformed", "all_stats"}
+
+geolocator = Nominatim(user_agent="Eldy Bot")
 
 # Format Reply Message
 def response(message_text):
@@ -114,36 +121,54 @@ def response(message_text):
         return unsupported_message
 
     # Format Reply based on Intent
-    if intent_name in general_coronavirus_info:
+
+    if intent_name == "hello":
+        return handle_hello()
+
+    elif intent_name in general_coronavirus_info:
         return handle_general_coronavirus_info(intent_name)
     
     elif intent_name in coronavirus_stats_intents:
         
         if wit_response["entities"] == None or wit_response["entities"]["wit$location:location"] == None or len(wit_response["entities"]["wit$location:location"]) == 0:
-            return unsupported_message
+            prev_intent_name = intent_name
+            return unparsable_location
 
         entity_body = wit_response["entities"]["wit$location:location"][0]["body"]
         entity_confidence = wit_response["entities"]["wit$location:location"][0]["confidence"]
 
         if entity_confidence < confidence_cutoff:
-            return unsupported_message
-
+            prev_intent_name = intent_name
+            return unparsable_location
+        
         return handle_coronavirus_stats(intent_name, entity_body)
 
-    elif intent_name == "goodbye":
-        return handle_goodbye()
+    elif intent_name == "location":
+
+        if wit_response["entities"] == None or wit_response["entities"]["wit$location:location"] == None or len(wit_response["entities"]["wit$location:location"]) == 0:
+            return unreadable_location
+
+        entity_body = wit_response["entities"]["wit$location:location"][0]["body"]
+        entity_confidence = wit_response["entities"]["wit$location:location"][0]["confidence"]
+
+        if entity_confidence < confidence_cutoff:
+            return unreadable_location
+
+        return handle_location(entity_body)
 
     else:
-        return unsupported_message
+        return handle_goodbye()
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~Intent Handlers~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def handle_hello():
+    return "Hi! How can I assist you today?"
 
 def handle_general_coronavirus_info(intent_name):
     return general_coronavirus_info[intent_name][0]["response"]
 
 def handle_coronavirus_stats(intent_name, entity_body):
 
-    geolocator = Nominatim(user_agent="Eldy Bot")
     location = geolocator.geocode(entity_body)
     geocode = location.raw["lat"] + "," + location.raw["lon"]
 
@@ -181,6 +206,12 @@ def handle_coronavirus_stats(intent_name, entity_body):
             reply_message += loc_type_capitalized + " Wide COVID-19 Statistics\n\nConfirmed Cases: " + cases + "\nRecoveries: " + recoveries + "\nDeaths: " + deaths + "\nTests Performed: " + tests + "\n\n\n"
 
     return reply_message.rstrip()
+
+def handle_location(entity_body):
+    if prev_intent_name is not None:
+        temp = prev_intent_name
+        prev_intent_name = None
+        return handle_coronavirus_stats(temp, entity_body)
 
 def handle_goodbye():
     return "Thank you for chatting with me today. Stay safe and feel free to chat with me anytime you need to!"
