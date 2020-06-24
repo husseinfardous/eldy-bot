@@ -11,8 +11,6 @@ import copy
 
 from geopy.geocoders import Nominatim
 
-import nltk
-nltk.download("wordnet")
 from nltk.stem.wordnet import WordNetLemmatizer
 
 app = Flask(__name__)
@@ -63,7 +61,6 @@ bot = Bot(FB_PAGE_TOKEN)
 unsupported_message = "Sorry, this message isn't supported!"
 unparsable_location = "Sorry, I couldn't quite get that. Please type in the location or address by itself."
 unreadable_location = "Sorry, I couldn't quite understand that. Please type in the location or address in a different format."
-unreadable_supply_request = "Sorry, I couldn't quite understand. I think you are requesting items. Can you please rephrase your question?"
 
 # ~~~~~~~~~~Wit.ai~~~~~~~~~~
 
@@ -102,9 +99,6 @@ supplier_state_dictionary = dict()
 
 # Timestamp of the last entry added to the Resource Provider Table 
 resource_providers_timestamp = '2020-05-22T03:36:27.000Z'
-
-supplies_request = []
-
 
 """
 ~~~~~~~~~~~~~~~~~~~~~JANILL LEMA~~~~~~~~~~~~~
@@ -238,24 +232,9 @@ def response(message_text):
 
         return handle_location(entity_body)
 
-    
-    elif intent_name == "resource_service_request":
-        global supplies_request
-        supplies_request.clear()
-
-        if wit_response["entities"] == None or "wit_supplies:wit_supplies" not in wit_response["entities"] or len(wit_response["entities"]["wit_supplies:wit_supplies"]) == 0:
-            return unreadable_supply_request
-
-        for idx in range(0, len(wit_response["entities"]["wit_supplies:wit_supplies"])):
-            entity = wit_response["entities"]["wit_supplies:wit_supplies"][idx]["body"]
-            supplies_request.append(entity)
-
-        entity_confidence = wit_response["entities"]["wit_supplies:wit_supplies"][0]["confidence"]
-
-        if entity_confidence < confidence_cutoff:
-            return unreadable_supply_request
-
-        return handle_supply_request()
+    """
+    ~~~~~~~~~~~~~~~~~~~~~JANILL LEMA~~~~~~~~~~~~~
+    """
 
     elif intent_name == "loneliness":
         return handle_loneliness()
@@ -331,40 +310,14 @@ def handle_coronavirus_stats(intent_name, entity_body):
 
 def handle_location(entity_body):
     global prev_intent_name
-    global supplies_request
-
-    if len(supplies_request)==0:
-        if prev_intent_name is not None:
-            temp = prev_intent_name
-            prev_intent_name = None
-            return handle_coronavirus_stats(temp, entity_body)
-    else:
-        return handle_supplies(entity_body)
+    if prev_intent_name is not None:
+        temp = prev_intent_name
+        prev_intent_name = None
+        return handle_coronavirus_stats(temp, entity_body)
 
 """
 ~~~~~~~~~~~~~~~~~~~~~JANILL LEMA~~~~~~~~~~~~~
 """
-def handle_supply_request():
-    return "I see that you are requesting supplies. Can you please give me your current location so that I can find people offerring these services/ supplies nearby? "
-
-def handle_supplies(reciever_address):
-    global supplies_request
-
-    check_new_entry_supplier_table()
-
-    address_locator= geolocator.geocode(reciever_address, addressdetails=True)
-    if address_locator:
-          find_possible_resource_providers(address_locator.raw['address']['state'], reciever_address, supplies_request)
-    else:
-          handle_resource_request()
-
-def handle_resource_request(data=None):
-     if data == None:
-          return "I could not understand your address. Could you please write format your address as this sample address: 70 Morningside St., New York, NY 11207"
-     elif (len(data) == 0):
-          return "Sorry, I could not find any of the supplies requested near you."
-     else:
-          return supplier_information(data)
 
 def handle_loneliness():
     return "I am very sorry to hear that. What are your interests/hobbies? Please write each one followed by a comma so I can connect you with people that have similar interests and that want to mingle with you about them :)"
@@ -396,35 +349,9 @@ def val_to_str(val):
         return "N/A"
     return str(val)
 
-def check_new_entry_supplier_table():
-
-     global resource_providers_timestamp
-
-     created_time_string = "CREATED_TIME() > '" + resource_providers_timestamp
-     supplier_table = requests.get("https://api.airtable.com/v0/app62IQsAsxBquR8C/tbllMS68Zqkwm7nbn?fields%5B%5D=Pickup+Address&filterByFormula=" + created_time_string + "'&sort%5B0%5D%5Bfield%5D=created_time&sort%5B0%5D%5Bdirection%5D=asc&api_key=" + AIRTABLE_API_KEY, auth=HTTPBasicAuth(AIRTABLE_EMAIL, AIRTABLE_PASSWORD)).json()["records"]
-     
-     if (len(supplier_table) > 0):
-
-          resource_providers_timestamp = supplier_table[-1]['createdTime']
-
-          for k in supplier_table:
-
-               supplier_state = ""
-               supplier_address = k['fields'].get('Pickup Address')
-          
-               address_locator = geolocator.geocode(supplier_address, addressdetails=True)
-
-               if address_locator:
-                    supplier_state = address_locator.raw['address']['state']
-                    supplier_state_dictionary.setdefault(supplier_state,[]).append(k['id'])
-               else:
-                    supplier_address = ''.join([i for i in supplier_address if not i.isdigit()])
-                    parsed_address_array = [ x.strip().lstrip().lower() for x in supplier_address.split(",")]
-
-                    for idx in range(0, len(us_states_data["abbreviations"])):
-                         if us_states_data["abbreviations"][idx].lower() in parsed_address_array or us_states_data["states"][idx].lower() in parsed_address_array:
-                              supplier_state_dictionary.setdefault(us_states_data["states"][idx],[]).append(k['id'])
-                              break
+"""
+~~~~~~~~~~~~~~~~~~~~~JANILL LEMA~~~~~~~~~~~~~
+"""
 
 def populate_companions_table_data(table):
 
@@ -474,83 +401,6 @@ def find_overlapping_interests(message_text):
         if len(overlapping_interests) > 0:
             ids_to_overlapping_interests[companions_interests_to_id[supply_interests]] = copy.deepcopy(overlapping_interests)
 
-def find_possible_resource_providers(reciever_state, reciever_address, supply_array):
-     supply_array_lemmatized = [lemmatizer.lemmatize(x.lower().strip().lstrip()) for x in supply_array]
-     
-     possible_suppliers = ','.join(supplier_state_dictionary[reciever_state])   
-     possible_supplier_list = requests.get("https://api.airtable.com/v0/app62IQsAsxBquR8C/tbllMS68Zqkwm7nbn?filterByFormula=SEARCH(RECORD_ID()%2C+%27"+ possible_suppliers + "%27)+!%3D+%22%22&api_key=" + AIRTABLE_API_KEY, auth=HTTPBasicAuth(AIRTABLE_EMAIL, AIRTABLE_PASSWORD)).json()["records"]
-    
-     matching_suppliers_list = []
-     for supplier_dict in possible_supplier_list:
-          available_supplier_supplies = []
-          available_supplier_supplies = [lemmatizer.lemmatize(s.lower().strip().lstrip()) for s in supplier_dict.get('fields').get('Service/Items')] 
-          
-          other_items = supplier_dict.get('fields').get('Other Items')
-          if other_items:
-               other_items = other_items.split(",")
-               available_supplier_supplies += [lemmatizer.lemmatize(s.lower().strip().lstrip()) for s in other_items]
-               
-          overlap_items = [x for x in supply_array_lemmatized for y in available_supplier_supplies if x in y or y in x]
-
-          if (len(overlap_items) > 0 ):
-               matching_suppliers_list.append(supplier_dict)
-     
-     find_providers_nearby(matching_suppliers_list, reciever_address)
-
-
-
-def find_providers_nearby(possible_suppliers, reciever_add):
-     providers_nearby = []
-
-     reciever_address = reciever_add.replace(" ", '+').replace(",", "%2C").replace('#','%')
-     for supplier in possible_suppliers:
-          supplier_address = supplier.get('fields').get("Pickup Address").replace(" ", '+').replace(",", "%2C").replace('#','%')
-          distance = requests.get("https://www.mapquestapi.com/directions/v2/alternateroutes?key=" + MAPQUEST_API_KEY + "&from=" + reciever_address + "&to=" + supplier_address + "&outFormat=json&ambiguities=ignore&routeType=pedestrian&maxRoutes=1&timeOverage=0&doReverseGeocode=false&enhancedNarrative=false&avoidTimedConditions=false&unit=M").json()['route']['distance']
-          if (distance <= 15):
-               providers_nearby.append([distance, supplier])
-     
-     handle_resource_request(sorted(providers_nearby))
-
-def supplier_information(supplier_data):
-
-     response = ""
-     
-     for arr in supplier_data:
-
-          distance_away = str(arr[0])
-          supplier_name = arr[1]['fields']['Name']
-          response += supplier_name + " is " + distance_away + " miles away from you! \n" 
-
-          pick_up_address = arr[1]['fields']['Pickup Address']
-          response += "Pickup Address: " + pick_up_address +'\n'
-
-          items = arr[1]['fields'].get('Service/Items')
-          if items:
-               response += "Items/Services Available: " + ",".join(items)
-          
-          other_items = arr[1]['fields'].get('Other Items')
-          if other_items:
-               if ( items!= None ):
-                    response += "," + other_items  + "\n"
-               else:
-                    response += "Items/Services Available: " + other_items + "\n"
-          else:
-               response += "\n"
-          
-          phone_number = arr[1]['fields'].get('Phone Number')
-          if phone_number:
-               response += "Phone Number: " + phone_number + '\n'
-          
-          email = arr[1]['fields'].get('Email')
-          if email:
-               response += "Email: " + email + '\n'
-          
-          additional_notes = arr[1]['fields'].get('Additional Notes')
-          if additional_notes:
-               response += "Additional Notes: " + additional_notes + "\n"
-          
-          response += "\n"
-     return response
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~Main Function~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 if __name__ == "__main__":
