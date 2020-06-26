@@ -331,7 +331,10 @@ def handle_interests(message_text):
         for match in ids_to_overlapping_interests:
             reply_message += companions_id_to_info[match]["Name"] + "\n"
             reply_message += companions_id_to_info[match]["Pronouns"] + "\n"
-            reply_message += companions_id_to_info[match]["Preferred Mode of Contact"] + "\n"
+            for mode_of_contact in companions_id_to_info[match]["Preferred Mode of Contact"]:
+                reply_message += mode_of_contact + ", "
+            reply_message.rstrip()[len(reply_message) - 1]
+            reply_message += "\n"
             reply_message += companions_id_to_info[match]["Phone Number"] + "\n"
             reply_message += companions_id_to_info[match]["Email"] + "\n"
             reply_message += companions_id_to_info[match]["Additional Notes"] + "\n"
