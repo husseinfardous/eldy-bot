@@ -345,7 +345,8 @@ def handle_interests(message_text):
             if "Email" in companions_id_to_info[match]:
                 reply_message += companions_id_to_info[match]["Email"] + "\n"
             
-            reply_message += companions_id_to_info[match]["Additional Notes"] + "\n"
+            if "Additional Notes" in companions_id_to_info[match]:
+                reply_message += companions_id_to_info[match]["Additional Notes"] + "\n"
             
             reply_message += "Common Interests/Hobbies: "
             for overlapping_interest in ids_to_overlapping_interests[match]:
