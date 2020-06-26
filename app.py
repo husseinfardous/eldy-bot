@@ -330,33 +330,39 @@ def handle_interests(message_text):
 
         for match in ids_to_overlapping_interests:
             
+            reply_message += "Name: "
             reply_message += companions_id_to_info[match]["Name"] + "\n"
             
+            reply_message += "Pronouns: "
             reply_message += companions_id_to_info[match]["Pronouns"] + "\n"
             
+            reply_message += "Preferred Mode of Contact: "
             for mode_of_contact in companions_id_to_info[match]["Preferred Mode of Contact"]:
                 reply_message += mode_of_contact + ", "
             reply_message = reply_message.rstrip()
-            reply_message = reply_message[len(reply_message) - 1] + "\n"
+            reply_message = reply_message[:len(reply_message)] + "\n"
             
             if "Phone Number" in companions_id_to_info[match]:
+                reply_message += "Phone Number: "
                 reply_message += companions_id_to_info[match]["Phone Number"] + "\n"
 
             if "Email" in companions_id_to_info[match]:
+                reply_message += "Email: "
                 reply_message += companions_id_to_info[match]["Email"] + "\n"
             
             if "Additional Notes" in companions_id_to_info[match]:
+                reply_message += "Additional Notes: "
                 reply_message += companions_id_to_info[match]["Additional Notes"] + "\n"
             
             reply_message += "Common Interests/Hobbies: "
             for overlapping_interest in ids_to_overlapping_interests[match]:
                 reply_message += overlapping_interest + ", "
             reply_message = reply_message.rstrip()
-            reply_message = reply_message[len(reply_message) - 1] + "\n\n"
+            reply_message = reply_message[:len(reply_message)] + "\n\n"
 
         ids_to_overlapping_interests = {}
         reply_message = reply_message.rstrip()
-        return reply_message[len(reply_message) - 1]
+        return reply_message[:len(reply_message)]
 
     return reply_message
 
