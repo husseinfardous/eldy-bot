@@ -11,6 +11,8 @@ import copy
 
 from geopy.geocoders import Nominatim
 
+import nltk
+nltk.download("wordnet")
 from nltk.stem.wordnet import WordNetLemmatizer
 
 app = Flask(__name__)
@@ -49,7 +51,7 @@ MAPQUEST_API_KEY = os.environ.get("MAPQUEST_API_KEY")
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~Global Variables~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # ~~~~~~~~~~General~~~~~~~~~~
-geolocator = Nominatim(user_agent="Eldy Bot")
+geolocator = Nominatim(user_agent="Eldy-Bot")
 lemmatizer = WordNetLemmatizer()
 
 # ~~~~~~~~~~Facebook Messenger API~~~~~~~~~~
@@ -99,10 +101,6 @@ supplier_state_dictionary = dict()
 
 # Timestamp of the last entry added to the Resource Provider Table 
 resource_providers_timestamp = '2020-05-22T03:36:27.000Z'
-
-"""
-~~~~~~~~~~~~~~~~~~~~~JANILL LEMA~~~~~~~~~~~~~
-"""
 
 # ~~~~~Loneliness Prevention~~~~~
 
@@ -311,29 +309,42 @@ def handle_location(entity_body):
         prev_intent_name = None
         return handle_coronavirus_stats(temp, entity_body)
 
-"""
-~~~~~~~~~~~~~~~~~~~~~JANILL LEMA~~~~~~~~~~~~~
-"""
-
 def handle_loneliness():
     return "I am very sorry to hear that. What are your interests/hobbies? Please write each one followed by a comma so I can connect you with people that have similar interests and that want to mingle with you about them :)"
 
 def handle_interests(message_text):
     
+    global ids_to_overlapping_interests
+
     check_companions_table_update()
     find_overlapping_interests(message_text)
 
-    reply_message = "Here are your matches!\n\n"
+    reply_message = "Sorry, there aren't any matches at this time."
 
-    for match in ids_to_overlapping_interests:
-        reply_message += companions_id_to_info[match]["Name"] + "\n"
-        reply_message += "Common Interests/Hobbies: "
-        for overlapping_interest in ids_to_overlapping_interests[match]:
-            reply_message += overlapping_interest + ", "
-        reply_message.rstrip()[len(reply_message) - 1]
-        reply_message += "\n\n"
+    if len(ids_to_overlapping_interests) > 0:
 
-    return reply_message.rstrip()[len(reply_message) - 1]
+        if len(ids_to_overlapping_interests) > 1:
+            reply_message = "Here are your matches!\n\n"
+        else:
+            reply_message = "Here is your match!\n\n"
+
+        for match in ids_to_overlapping_interests:
+            reply_message += companions_id_to_info[match]["Name"] + "\n"
+            reply_message += companions_id_to_info[match]["Pronouns"] + "\n"
+            reply_message += companions_id_to_info[match]["Preferred Mode of Contact"] + "\n"
+            reply_message += companions_id_to_info[match]["Phone Number"] + "\n"
+            reply_message += companions_id_to_info[match]["Email"] + "\n"
+            reply_message += companions_id_to_info[match]["Additional Notes"] + "\n"
+            reply_message += "Common Interests/Hobbies: "
+            for overlapping_interest in ids_to_overlapping_interests[match]:
+                reply_message += overlapping_interest + ", "
+            reply_message.rstrip()[len(reply_message) - 1]
+            reply_message += "\n\n"
+
+        ids_to_overlapping_interests = {}
+        return reply_message.rstrip()[len(reply_message) - 1]
+
+    return reply_message
 
 def handle_goodbye():
     return "Thank you for chatting with me today. Stay safe and feel free to chat with me anytime you need to!"
@@ -344,10 +355,6 @@ def val_to_str(val):
     if val is None:
         return "N/A"
     return str(val)
-
-"""
-~~~~~~~~~~~~~~~~~~~~~JANILL LEMA~~~~~~~~~~~~~
-"""
 
 def populate_companions_table_data(table):
 
