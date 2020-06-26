@@ -339,9 +339,11 @@ def handle_interests(message_text):
             reply_message = reply_message.rstrip()
             reply_message = reply_message[len(reply_message) - 1] + "\n"
             
-            reply_message += companions_id_to_info[match]["Phone Number"] + "\n"
-            
-            reply_message += companions_id_to_info[match]["Email"] + "\n"
+            if "Phone Number" in companions_id_to_info[match]:
+                reply_message += companions_id_to_info[match]["Phone Number"] + "\n"
+
+            if "Email" in companions_id_to_info[match]:
+                reply_message += companions_id_to_info[match]["Email"] + "\n"
             
             reply_message += companions_id_to_info[match]["Additional Notes"] + "\n"
             
