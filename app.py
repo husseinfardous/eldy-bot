@@ -329,6 +329,7 @@ def handle_coronavirus_stats(intent_name, entity_body):
 def handle_location(entity_body):
     
     global prev_intent_name
+    global supplies_request
 
     if len(supplies_request) > 0 :
         return handle_supplier_address(entity_body)
