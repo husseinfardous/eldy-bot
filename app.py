@@ -348,9 +348,9 @@ def handle_supplier_address(receiver_address):
     address_locator = geolocator.geocode(receiver_address, addressdetails=True)
     
     if address_locator:
-        find_possible_resource_providers(address_locator.raw["address"]["state"], receiver_address, supplies_request)
+        return find_possible_resource_providers(address_locator.raw["address"]["state"], receiver_address, supplies_request)
     else:
-        handle_resource_request()
+        return handle_resource_request()
 
 def handle_loneliness():
     return "I am very sorry to hear that. What are your interests/hobbies? Please write each one followed by a comma so I can connect you with people that have similar interests and that want to mingle with you about them :)"
@@ -455,7 +455,7 @@ def find_possible_resource_providers(receiver_state, receiver_address, supply_ar
         if len(overlap_items) > 0:
             matching_suppliers_list.append(supplier_dict)
      
-    find_providers_nearby(matching_suppliers_list, receiver_address)
+    return find_providers_nearby(matching_suppliers_list, receiver_address)
 
 def find_providers_nearby(possible_suppliers, receiver_add):
 
@@ -471,7 +471,7 @@ def find_providers_nearby(possible_suppliers, receiver_add):
         if (distance <= 15):
             providers_nearby.append([distance, supplier])
      
-    handle_resource_request(sorted(providers_nearby))
+    return handle_resource_request(sorted(providers_nearby))
 
 def create_supplier_information_reply(supplier_data):
 
@@ -523,7 +523,7 @@ def check_new_entry_supplier_table():
      supplier_table = requests.get("https://api.airtable.com/v0/app62IQsAsxBquR8C/tbllMS68Zqkwm7nbn?fields%5B%5D=Pickup+Address&filterByFormula=" + created_time_string + "'&sort%5B0%5D%5Bfield%5D=created_time&sort%5B0%5D%5Bdirection%5D=asc&api_key=" + AIRTABLE_API_KEY, auth=HTTPBasicAuth(AIRTABLE_EMAIL, AIRTABLE_PASSWORD)).json()["records"]
      
      if len(supplier_table) > 0:
-         update_supplier_table(supplier_table)
+        update_supplier_table(supplier_table)
 
 def update_supplier_table(table):
             
