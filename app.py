@@ -327,10 +327,12 @@ def handle_coronavirus_stats(intent_name, entity_body):
         return unparsable_location
 
 def handle_location(entity_body):
+    
     global prev_intent_name
 
     if len(supplies_request) > 0 :
         return handle_supplier_address(entity_body)
+    
     else:
         if prev_intent_name is not None:
             temp = prev_intent_name
@@ -350,19 +352,6 @@ def handle_supplier_address(reciever_address):
         find_possible_resource_providers(address_locator.raw['address']['state'], reciever_address, supplies_request)
     else:
         handle_resource_request()
-
-def handle_resource_request(data=None):
-
-    global supplies_request
-
-    if data == None:
-        return "I could not understand your address. Could you please format your address as this sample address: 70 Morningside St., New York, NY 11207"
-    elif (len(data) == 0):
-        supplies_request.clear()
-        return "Sorry, I could not find any of the supplies/services that you requested."
-    else:
-        supplies_request.clear()
-        return create_supplier_information_reply(data)
 
 def handle_loneliness():
     return "I am very sorry to hear that. What are your interests/hobbies? Please write each one followed by a comma so I can connect you with people that have similar interests and that want to mingle with you about them :)"
@@ -421,6 +410,29 @@ def handle_interests(message_text):
 
     return reply_message
 
+def handle_goodbye():
+    return "Thank you for chatting with me today. Stay safe and feel free to chat with me anytime you need to!"
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~Helper Functions~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+def val_to_str(val):
+    if val is None:
+        return "N/A"
+    return str(val)
+
+def handle_resource_request(data=None):
+
+    global supplies_request
+
+    if data == None:
+        return "I could not understand your address. Could you please format your address as this sample address: 70 Morningside St., New York, NY 11207"
+    elif (len(data) == 0):
+        supplies_request.clear()
+        return "Sorry, I could not find any of the supplies/services that you requested."
+    else:
+        supplies_request.clear()
+        return create_supplier_information_reply(data)
+
 def find_possible_resource_providers(reciever_state, reciever_address, supply_array):
      
     possible_suppliers = ','.join(supplier_state_dictionary[reciever_state])   
@@ -445,7 +457,6 @@ def find_possible_resource_providers(reciever_state, reciever_address, supply_ar
             matching_suppliers_list.append(supplier_dict)
      
     find_providers_nearby(matching_suppliers_list, reciever_address)
-
 
 def find_providers_nearby(possible_suppliers, reciever_add):
 
@@ -502,16 +513,6 @@ def create_supplier_information_reply(supplier_data):
 
     return response
 
-def handle_goodbye():
-    return "Thank you for chatting with me today. Stay safe and feel free to chat with me anytime you need to!"
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~Helper Functions~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-def val_to_str(val):
-    if val is None:
-        return "N/A"
-    return str(val)
-
 def check_new_entry_supplier_table():
 
      global resource_providers_timestamp
@@ -521,7 +522,6 @@ def check_new_entry_supplier_table():
      
      if (len(supplier_table) > 0):
          update_supplier_table(supplier_table)
-
 
 def update_supplier_table(table):
             
