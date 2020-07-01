@@ -101,9 +101,9 @@ with open("us_states.json") as json_file:
 supplier_state_dictionary = dict()
 
 # Timestamp of the last entry added to the Resource Provider Table 
-resource_providers_timestamp = '2020-05-22T03:36:27.000Z'
+resource_providers_timestamp = "2020-05-22T03:36:27.000Z"
 
-# array to keep track of requested supplies 
+# Array to keep track of requested supplies 
 supplies_request = []
 
 # ~~~~~Loneliness Prevention~~~~~
@@ -263,6 +263,8 @@ def response(message_text):
     else:
         return handle_goodbye()
 
+
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~Intent Handlers~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 def handle_hello():
@@ -411,6 +413,8 @@ def handle_interests(message_text):
 
 def handle_goodbye():
     return "Thank you for chatting with me today. Stay safe and feel free to chat with me anytime you need to!"
+
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~Helper Functions~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -595,6 +599,8 @@ def find_overlapping_interests(message_text):
 
         if len(overlapping_interests) > 0:
             ids_to_overlapping_interests[companions_interests_to_id[supply_interests]] = copy.deepcopy(overlapping_interests)
+
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~Main Function~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
